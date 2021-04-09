@@ -1,5 +1,5 @@
 <?php
-require_once 'C:\MAMP\htdocs\group_project_1\class\User.php';
+require_once 'class\User.php';
 
 interface IUserManager {
     public static function authenticate($emailInput, $passwordInput);
