@@ -23,3 +23,28 @@ class SimpleUserManager implements IUserManager {
         }
     }
 }
+
+class PdoUserManager implements IUserManager {
+    public static function authenticate($emailInput, $passwordInput) {
+        try {
+            $pdo = new PDO('mysql:host=localhost;port=3306;dbname=misc', 'root', 'root');
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $sql = 'SELECT * FROM users WHERE email = :em AND pass = :pa';
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(array(
+                ':em' => $emailInput,
+                ':pa' => $passwordInput
+            ));
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result) {
+                return new User($emailInput, $passwordInput);
+            }
+            else {
+                throw new Exception('Invalid email or password');
+            }
+        }
+        catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+}
