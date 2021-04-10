@@ -15,32 +15,57 @@
     </form>
     <?php
         require_once 'manager\PostManager.class.php';
-        $simplePostManager = new SimplePostManager();
-        session_start();
+        // Session Part
+
+        // $simplePostManager = new SimplePostManager();
+        // session_start();
+        // if (isset($_POST['find'])) {
+        //     if (0 <= $_POST['id'] && $_POST['id'] < $_SESSION['counter']) {
+        //         $post = $simplePostManager->findPostById($_POST['id']);
+        //         echo $post->getUser() . ' ' . $post->getTitle() . ' ' . $post->getBody();
+        //         echo '<br>';
+        //     }
+        //     else {
+        //         echo 'Could not find a post with id: ' . $_POST['id'] . '<br>';
+        //     }
+        // }
+        // if (isset($_POST['delete'])) {
+        //     if (0 <= $_POST['id'] && $_POST['id'] < $_SESSION['counter']) {
+        //         $simplePostManager->removePost($_POST['id']);
+        //     }
+        //     else {
+        //         echo 'Could not find a post with id: ' . $_POST['id'] . '<br>';
+        //     }
+        // }
+        // echo '<br>';
+        // $posts = $simplePostManager->findAllPosts();
+        // $i = 0;
+        // foreach ($posts as $post) {
+        //     echo $i . ' ' . $post->getUser() . ' ' . $post->getTitle() . ' ' . $post->getBody();
+        //     $i += 1;
+        //     echo '<br>';
+        // }
+        
+        // Pdo Part
+
+        $pdoPostManager = new PdoPostManager();
         if (isset($_POST['find'])) {
-            if (0 <= $_POST['id'] && $_POST['id'] < $_SESSION['counter']) {
-                $post = $simplePostManager->findPostById($_POST['id']);
-                echo $post->getUser() . ' ' . $post->getTitle() . ' ' . $post->getBody();
-                echo '<br>';
+            $post = $pdoPostManager->findPostById($_POST['id']);
+            if ($post) {
+                echo $post['postId'] . ' ' . $post['title'] . ' ' . $post['body'] . ' ' . $post['email'];
             }
             else {
                 echo 'Could not find a post with id: ' . $_POST['id'] . '<br>';
             }
+            echo '<br>';
         }
         if (isset($_POST['delete'])) {
-            if (0 <= $_POST['id'] && $_POST['id'] < $_SESSION['counter']) {
-                $simplePostManager->removePost($_POST['id']);
-            }
-            else {
-                echo 'Could not find a post with id: ' . $_POST['id'] . '<br>';
-            }
+            $pdoPostManager->removePost($_POST['id']);
         }
         echo '<br>';
-        $posts = $simplePostManager->findAllPosts();
-        $i = 0;
+        $posts = $pdoPostManager->findAllPosts();
         foreach ($posts as $post) {
-            echo $i . ' ' . $post->getUser() . ' ' . $post->getTitle() . ' ' . $post->getBody();
-            $i += 1;
+            echo $post['postId'] . ' ' . $post['title'] . ' ' . $post['body'] . ' ' . $post['email'];
             echo '<br>';
         }
     ?>

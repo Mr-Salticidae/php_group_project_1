@@ -22,15 +22,29 @@
     </form>
     <?php
         require_once 'manager\PostManager.class.php';
-        $simplePostManager = new SimplePostManager();
-        session_start();
+
+        // Session part
+
+        // $simplePostManager = new SimplePostManager();
+        // session_start();
+        // if (isset($_POST['viewPosts'])) {
+        //     header('Location: postList.php');
+        //     return;        
+        // }
+        // if (isset($_POST['title']) && isset($_POST['body'])) {
+        //     $_SESSION['user'] = $_GET['email'];  
+        //     $simplePostManager->addPost($_POST['title'], $_POST['body'], $_SESSION['user']);          
+        // }
+
+        // Pdo part
+        $pdoPostManager = new PdoPostManager();
         if (isset($_POST['viewPosts'])) {
             header('Location: postList.php');
             return;        
         }
         if (isset($_POST['title']) && isset($_POST['body'])) {
             $_SESSION['user'] = $_GET['email'];  
-            $simplePostManager->addPost($_POST['title'], $_POST['body'], $_SESSION['user']);          
+            $pdoPostManager->addPost($_POST['title'], $_POST['body'], $_SESSION['user']);          
         }
     ?>
 </body>
