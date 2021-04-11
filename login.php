@@ -22,7 +22,8 @@
     // Session part
 
     // if (isset($_POST['email']) && isset($_POST['password'])) {
-    //     $user = SimpleUserManager::authenticate($_POST['email'], $_POST['password']);
+    //     $simpleUserManager = new SimpleUserManager();
+    //     $user = $simpleUserManager->authenticate($_POST['email'], $_POST['password']);
     //     if ($user != null) {
     //         header('Location: addPost.php?email=' . $user->getEmail());
     //         return;
@@ -32,7 +33,8 @@
     // Pdo part
 
     if (isset($_POST['email']) && isset($_POST['password'])) {
-        $user = PdoUserManager::authenticate($_POST['email'], $_POST['password']);
+        $pdoUserManager = new PdoUserManager();
+        $user = $pdoUserManager->authenticate($_POST['email'], $_POST['password']);
         if ($user != null) {
             session_start();
             $_SESSION['user'] = $user;

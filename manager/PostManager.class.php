@@ -1,6 +1,7 @@
 <?php
 require_once 'class\Post.php';
 require_once 'class\User.php';
+require_once 'manager\AbstractPdoManager.class.php';
 interface IPostManager {
     function addPost($title, $body, $user);
     function findAllPosts();
@@ -41,13 +42,11 @@ class SimplePostManager implements IPostManager {
     }
 }
 
-class PdoPostManager implements IPostManager {
+class PdoPostManager extends AbstractPdoManager implements IPostManager {
     function addPost($title, $body, $user) {
         try {
-            $pdo = new PDO('mysql:host=localhost;port=3306;dbname=misc', 'root', 'root');
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = 'INSERT INTO posts (title, body, email) VALUES (:ti, :bo, :em)';
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $result = $stmt->execute(array(
                 ':ti' => $title,
                 ':bo' => $body,
@@ -65,35 +64,29 @@ class PdoPostManager implements IPostManager {
     }
     function findAllPosts() {
         try {
-            $pdo = new PDO('mysql:host=localhost;port=3306;dbname=misc', 'root', 'root');
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = 'SELECT * FROM posts';
-            $stmt = $pdo->query($sql);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt = $this->pdo->query($sql);
+            return $stmt->fetchAll();
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
     function findPostById($id) {
         try {
-            $pdo = new PDO('mysql:host=localhost;port=3306;dbname=misc', 'root', 'root');
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = 'SELECT * FROM posts WHERE postId = :id';
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $stmt->execute(array(
                 ':id' => (int)$id
             ));
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            return $stmt->fetch();
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
     function removePost($id) {
         try {
-            $pdo = new PDO('mysql:host=localhost;port=3306;dbname=misc', 'root', 'root');
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $sql = 'DELETE FROM posts WHERE postId = :id';
-            $stmt = $pdo->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
             $result = $stmt->execute(array(
                 ':id' => (int)$id
             ));
