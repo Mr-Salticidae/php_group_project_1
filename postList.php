@@ -12,6 +12,7 @@
     <input type="number" name="id">
     <input type="submit" name="find" value="Find">
     <input type="submit" name="delete" value="Delete">
+    <input type="submit" name="viewComment" value="View Comment">
     </form>
     <?php
         require_once 'manager\PostManager.class.php';
@@ -66,6 +67,18 @@
         $posts = $pdoPostManager->findAllPosts();
         foreach ($posts as $post) {
             echo $post['postId'] . ' ' . $post['title'] . ' ' . $post['body'] . ' ' . $post['email'];
+            echo '<br>';
+        }
+        if (isset($_POST['viewComment'])) {
+            $post = $pdoPostManager->findPostById($_POST['id']);
+            if ($post) {
+                session_start();
+                $_SESSION['postId'] = $_POST['id'];
+                header('Location: commentList.php');
+            }
+            else {
+                echo 'Could not find a post with id: ' . $_POST['id'] . '<br>';
+            }
             echo '<br>';
         }
     ?>
